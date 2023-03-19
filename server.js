@@ -3,6 +3,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const axios = require("axios");
 require("dotenv").config();
 // import route handlers
 
@@ -17,8 +18,7 @@ app.listen(PORT, () => {
 });
 
 /***
- * Database stuff
- * collection products is in test
+ * Database related code
  */
 
 mongoose.connect("mongodb://localhost:27017/MyMovies", {
@@ -43,14 +43,34 @@ function homeHandler(req, res) {
 }
 
 const getMoviesFromAPI = async (req, res) => {
-  const url = "https://random-d.uk/api/v2/random";
+  const url = `https://api.themoviedb.org/3/trending/movie/week?api_key=${process.env.API_KEY}`;
   try {
-    console.log("test");
-    let movieData = await axios.get("https://random-d.uk/api/v2/random");
-    console.log(movieData);
+    let movieData = await axios.get(url);
     res.status(200).send(movieData.data);
   } catch (e) {
-    res.status(500).send(e.movieData.data);
+    res.status(500).send(e);
+  }
+};
+
+const searchMoviesFromAPI = async (req, res) => {
+  const query = req.query.query;
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.API_KEY}&language=en-US&query=${query}&include_adult=false`;
+  try {
+    let movieData = await axios.get(url);
+    res.status(200).send(movieData.data);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
+const getMovieDetailsFromAPI = async (req, res) => {
+  const id = req.query.id;
+  const url = `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.API_KEY}&language=en-US`;
+  try {
+    let movieData = await axios.get(url);
+    res.status(200).send(movieData.data);
+  } catch (e) {
+    res.status(500).send(e);
   }
 };
 
@@ -66,7 +86,7 @@ const getMoviesFromDB = async (req, res) => {
 const addMovie = async (req, res) => {
   const { apiId, title, imageUrl, overview, releaseDate } = req.body;
 
-  let newTask = await movieModel.create({
+  let newMovie = await movieModel.create({
     apiId,
     title,
     imageUrl,
@@ -89,7 +109,7 @@ const deleteMovie = async (req, res) => {
 
   try {
     await movieModel.findByIdAndDelete(id);
-    // send all tasks back
+
     let moviesArray = await movieModel.find({});
     res.status(200).json({
       message: "Successfully deleted.",
@@ -103,10 +123,16 @@ const deleteMovie = async (req, res) => {
 };
 
 app.get("/", homeHandler);
-// get all movies from TMDB API based on search query
+// get trending movies foe the week from TMDB API
 app.get("/moviesapi", getMoviesFromAPI);
 
-//gto favourite movies
+//get movies from TMDB API based on search query
+app.get("/searchmovies", searchMoviesFromAPI);
+
+////get movies details from TMDB API based on id
+app.get("/moviedetails", getMovieDetailsFromAPI);
+
+//get favourite movies
 app.get("/movies", getMoviesFromDB);
 
 // add movie to favourites
