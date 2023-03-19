@@ -123,7 +123,7 @@ const deleteMovie = async (req, res) => {
 };
 
 app.get("/", homeHandler);
-// get trending movies foe the week from TMDB API
+// get trending movies for the week from TMDB API
 app.get("/moviesapi", getMoviesFromAPI);
 
 //get movies from TMDB API based on search query
