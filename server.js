@@ -22,18 +22,19 @@ app.listen(PORT, () => {
  */
 
 mongoose.connect("mongodb://localhost:27017/MyMovies", {
-  //useNewUrlParser: true,
-  //strictQuery: false
+  //   useUnifiedTopology: true,
+  //   useNewUrlParser: true,
+  //   autoIndex: true,
 });
 
 // create a schema
 
 const movieSchema = new mongoose.Schema({
-  apiId: Number,
+  id: { type: Number, unique: true },
   title: String,
-  imageUrl: String,
+  poster_path: String,
   overview: String,
-  releaseDate: String,
+  release_date: String,
 });
 
 const movieModel = mongoose.model("movies", movieSchema);
@@ -84,15 +85,18 @@ const getMoviesFromDB = async (req, res) => {
 };
 
 const addMovie = async (req, res) => {
-  const { apiId, title, imageUrl, overview, releaseDate } = req.body;
-
-  let newMovie = await movieModel.create({
-    apiId,
-    title,
-    imageUrl,
-    overview,
-    releaseDate,
-  });
+  const { id, title, poster_path, overview, release_date } = req.body;
+  try {
+    let newMovie = await movieModel.create({
+      id,
+      title,
+      poster_path,
+      overview,
+      release_date,
+    });
+  } catch (e) {
+    console.log("Movie already exists in the database: " + e);
+  }
 
   // add movies to favourites
   // including one just added.
