@@ -21,7 +21,7 @@ app.listen(PORT, () => {
  * Database related code
  */
 
-mongoose.connect(`${process.env.MONGO_URL}/MyMovies`, {
+mongoose.connect(process.env.MONGO_URL, {
   //   useUnifiedTopology: true,
   //   useNewUrlParser: true,
   //   autoIndex: true,
