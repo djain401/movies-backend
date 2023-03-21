@@ -21,7 +21,7 @@ app.listen(PORT, () => {
  * Database related code
  */
 
-mongoose.connect("mongodb://localhost:27017/MyMovies", {
+mongoose.connect(`${process.env.MONGO_URL}/MyMovies`, {
   //   useUnifiedTopology: true,
   //   useNewUrlParser: true,
   //   autoIndex: true,
