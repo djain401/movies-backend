@@ -75,6 +75,17 @@ const getMovieDetailsFromAPI = async (req, res) => {
   }
 };
 
+const getMoviesCastFromAPI = async (req, res) => {
+  const id = req.query.id;
+  const url = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${process.env.API_KEY}&language=en-US`;
+  try {
+    let movieData = await axios.get(url);
+    res.status(200).send(movieData.data);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+};
+
 const getMoviesFromDB = async (req, res) => {
   try {
     const moviesArray = await movieModel.find({});
@@ -135,6 +146,9 @@ app.get("/searchmovies", searchMoviesFromAPI);
 
 ////get movies details from TMDB API based on id
 app.get("/moviedetails", getMovieDetailsFromAPI);
+
+//get movie cast by from api
+app.get("/moviecast", getMoviesCastFromAPI);
 
 //get favourite movies
 app.get("/movies", getMoviesFromDB);
