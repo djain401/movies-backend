@@ -1,7 +1,7 @@
-"use strict";
+'use strict'
 
-const express = require("express");
-const movieRouter = express.Router();
+const express = require('express')
+const movieRouter = express.Router()
 
 const {
   homeHandler,
@@ -11,29 +11,29 @@ const {
   getMoviesCastFromAPI,
   getMoviesFromDB,
   addMovie,
-  deleteMovie,
-} = require("../controllers/movies");
+  deleteMovie
+} = require('../controllers/movies')
 
-movieRouter.get("/", homeHandler);
+movieRouter.get('/', homeHandler)
 // get trending movies for the week from TMDB API
-movieRouter.get("/moviesapi", getMoviesFromAPI);
+movieRouter.get('/moviesapi', getMoviesFromAPI)
 
-//get movies from TMDB API based on search query
-movieRouter.get("/searchmovies", searchMoviesFromAPI);
+// get movies from TMDB API based on search query
+movieRouter.get('/searchmovies', searchMoviesFromAPI)
 
-////get movies details from TMDB API based on id
-movieRouter.get("/moviedetails", getMovieDetailsFromAPI);
+/// /get movies details from TMDB API based on id
+movieRouter.get('/moviedetails', getMovieDetailsFromAPI)
 
-//get movie cast by from api
-movieRouter.get("/moviecast", getMoviesCastFromAPI);
+// get movie cast by from api
+movieRouter.get('/moviecast', getMoviesCastFromAPI)
 
-//get favourite movies
-movieRouter.get("/movies", getMoviesFromDB);
+// get favourite movies
+movieRouter.get('/movies', getMoviesFromDB)
 
 // add movie to favourites
-movieRouter.post("/movies", addMovie);
+movieRouter.post('/movies', addMovie)
 
 // delete a movie from favourites
-movieRouter.delete("/movies/:id", deleteMovie);
+movieRouter.delete('/movies/:id', deleteMovie)
 
-module.exports = movieRouter;
+module.exports = movieRouter
